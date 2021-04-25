@@ -96,7 +96,7 @@ void kpMainWindow::setupEditMenuActions ()
     d->actionPasteInNewWindow->setText (i18n ("Paste in &New Window"));
     connect (d->actionPasteInNewWindow, &QAction::triggered,
              this, &kpMainWindow::slotPasteInNewWindow);
-    ac->setDefaultShortcut (d->actionPasteInNewWindow, Qt::CTRL + Qt::SHIFT + Qt::Key_V);
+    ac->setDefaultShortcut (d->actionPasteInNewWindow, Qt::CTRL | Qt::SHIFT | Qt::Key_V);
 
     //d->actionDelete = KStandardAction::clear (this, SLOT (slotDelete()), ac);
     d->actionDelete = ac->addAction (QStringLiteral("edit_clear"));
@@ -455,7 +455,7 @@ void kpMainWindow::pasteText (const QString &text,
             macroCmd->addCommand (giveContentCmd);
         }
 
-        for (int i = 0; i < static_cast<int> (textLines.size ()); i++)
+        for (int i = 0; i < textLines.size(); i++)
         {
             if (i > 0)
             {
@@ -496,15 +496,8 @@ void kpMainWindow::pasteText (const QString &text,
         }
 
         int width = 0;
-        for (QList <QString>::const_iterator it = textLines.constBegin ();
-             it != textLines.constEnd ();
-             ++it)
-        {
-            const int w = fontMetrics.width (*it);
-            if (w > width) {
-                width = w;
-            }
-        }
+        foreach (const QString &str, textLines)
+          width = std::max(width, fontMetrics.horizontalAdvance(str));
 
         // limit the size to avoid memory overflow
         width = qMin(qMax(QApplication::desktop()->width(), d->document ? d->document->width() : 0), width);

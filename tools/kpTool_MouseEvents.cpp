@@ -67,7 +67,7 @@ void kpTool::mousePressEvent (QMouseEvent *e)
                << " beganDraw=" << d->beganDraw << endl;
 #endif
 
-    if (e->button () == Qt::MidButton)
+    if (e->button () == Qt::MiddleButton)
     {
         const QString text = QApplication::clipboard ()->text (QClipboard::Selection);
     #if DEBUG_KP_TOOL && 1
@@ -308,7 +308,7 @@ void kpTool::wheelEvent (QWheelEvent *e)
     // Zoom in/out depending on wheel direction.
 
     // Moved wheel away from user?
-    if (e->delta () > 0)
+    if (e->angleDelta().y() > 0)
     {
     #if DEBUG_KP_TOOL
         qCDebug(kpLogTools) << "\tzoom in";
@@ -317,7 +317,7 @@ void kpTool::wheelEvent (QWheelEvent *e)
         e->accept ();
     }
     // Moved wheel towards user?
-    else if (e->delta () < 0)
+    else if (e->angleDelta().y() < 0)
     {
     #if DEBUG_KP_TOOL
         qCDebug(kpLogTools) << "\tzoom out";
